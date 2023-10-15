@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {Context} from "../index";
-import {Container, Nav, Navbar, NavLink} from "react-bootstrap";
+import {Button, Container, Nav, Navbar, NavLink} from "react-bootstrap";
 import {ADMIN_ROUTE, LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE} from "../utils/consts";
 import {observer} from "mobx-react-lite";
 
@@ -12,9 +12,16 @@ const NavBar = observer(() => {
         <Navbar bg="dark" data-bs-theme="dark">
             <Container>
                 <NavLink style={{color: "white"}} href={SHOP_ROUTE}>Online SHOP</NavLink>
-                <Nav className="ml-auto" style={{color: "white"}}>
-
-                </Nav>
+                {user.isAuth ?
+                    <Nav className="ml-auto" style={{color: "white"}}>
+                        <Button variant={"outline-light"}>Admin</Button>
+                        <Button variant={"outline-light"} className="ms-2">Log out</Button>
+                    </Nav>
+                    :
+                    <Nav className="ml-auto" style={{color: "white"}}>
+                        <Button variant={"outline-light"} onClick={() => user.setIsAuth(true)}>Authorization</Button>
+                    </Nav>
+                }
             </Container>
         </Navbar>
     );
