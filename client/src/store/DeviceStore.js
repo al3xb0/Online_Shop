@@ -12,16 +12,19 @@ export default class DeviceStore {
         this._brands = [
             {id: 1, name: 'Apple'},
             {id: 2, name: 'HP'},
-            {id: 3, name: 'Apple'},
-            {id: 4, name: 'HP'},
-            {id: 5, name: 'Apple'},
-            {id: 6, name: 'HP'},
+            {id: 3, name: 'Asus'},
+            {id: 4, name: 'Samsung'},
+            {id: 5, name: 'Dell'},
+            {id: 6, name: 'Razor'},
+
         ]
         this._devices = [
             {id: 1, name: 'Iphone 15', price: 1000, rating: 5, img: 'https://www.apple.com/newsroom/images/2023/09/apple-unveils-iphone-15-pro-and-iphone-15-pro-max/article/Apple-iPhone-15-Pro-lineup-hero-230912_Full-Bleed-Image.jpg.large.jpg'},
             {id: 2, name: 'Iphone 15', price: 1000, rating: 5, img: 'https://www.apple.com/newsroom/images/2023/09/apple-unveils-iphone-15-pro-and-iphone-15-pro-max/article/Apple-iPhone-15-Pro-lineup-hero-230912_Full-Bleed-Image.jpg.large.jpg'},
             {id: 3, name: 'Iphone 15', price: 1000, rating: 5, img: 'https://www.apple.com/newsroom/images/2023/09/apple-unveils-iphone-15-pro-and-iphone-15-pro-max/article/Apple-iPhone-15-Pro-lineup-hero-230912_Full-Bleed-Image.jpg.large.jpg'},
             {id: 4, name: 'Iphone 15', price: 1000, rating: 5, img: 'https://www.apple.com/newsroom/images/2023/09/apple-unveils-iphone-15-pro-and-iphone-15-pro-max/article/Apple-iPhone-15-Pro-lineup-hero-230912_Full-Bleed-Image.jpg.large.jpg'},
+            {id: 5, name: 'Iphone 15', price: 1000, rating: 5, img: 'https://www.apple.com/newsroom/images/2023/09/apple-unveils-iphone-15-pro-and-iphone-15-pro-max/article/Apple-iPhone-15-Pro-lineup-hero-230912_Full-Bleed-Image.jpg.large.jpg'},
+            {id: 6, name: 'Iphone 15', price: 1000, rating: 5, img: 'https://www.apple.com/newsroom/images/2023/09/apple-unveils-iphone-15-pro-and-iphone-15-pro-max/article/Apple-iPhone-15-Pro-lineup-hero-230912_Full-Bleed-Image.jpg.large.jpg'},
 
         ]
         this._selectedType = {}
