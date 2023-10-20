@@ -13,32 +13,13 @@ const App = observer(() => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        // const token = localStorage.getItem('token')
-
-        // if(!user.isAuth && !token){
-        //     setLoading(false)
-        //     return
-        // }
-        // setTimeout(() => {
-        //     check()
-        //         .then((data) => {
-        //             if (data) {
-        //                 user.setIsAuth(true);
-        //                 user.setUser(true);
-        //             } else {
-        //                 user.setIsAuth(false);
-        //                 user.setUser(false);
-        //             }
-        //         })
-        //         .finally(() => setLoading(false));
-        //     }, 1000)
-        // }, [])
-
-                check().then((data) => {
-                        user.setIsAuth(true)
-                        user.setUser(true)
-                    }).finally(() => setLoading(false));
-            }, [])
+        check().then((data) => {
+                user.setUser(data.role)
+                user.setIsAuth(true)
+            })
+            .catch((error) => user.setIsAuth(false))
+            .finally(() => setLoading(false));
+    }, [])
 
     if (loading) {
         return <Spinner animation={"grow"}/>
