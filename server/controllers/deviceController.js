@@ -1,7 +1,8 @@
-const {Device, DeviceInfo} =  require('../models/models')
+const {Device, DeviceInfo, Brand, Type} =  require('../models/models')
 const ApiError = require('../error/ApiError')
 const uuid = require('uuid')
 const path = require('path')
+const {badRequest} = require("../error/ApiError");
 
 class DeviceController {
     async create(req, res, next) {
@@ -30,25 +31,56 @@ class DeviceController {
         }
     }
 
-    async getAll(req, res) {
-        let {brandId, typeId, limit, page} = req.query
-        page = page || 1
-        limit = limit || 9
-        let offset = page * limit - limit
-        let devices;
-        if (!brandId && !typeId) {
-            devices = await Device.findAndCountAll({limit, offset})
+    async getAll(req, res,next) {
+        try {
+            let {brandId, typeId, limit, page} = req.query;
+            page = page || 1
+            limit = limit || 9
+            let offset = page * limit - limit
+            let devices;
+            if (!brandId && !typeId) {
+                devices = await Device.findAndCountAll({
+                    include: [
+                        {model: Brand},
+                        {model: Type},
+                    ],
+                    limit,
+                    offset})
+            }
+            if (brandId && !typeId) {
+                devices = await Device.findAndCountAll({
+                    where:{brandId},
+                    include: [
+                        {model: Brand},
+                        {model: Type},
+                    ],
+                    limit,
+                    offset
+                })}
+            if (!brandId && typeId) {
+                devices = await Device.findAndCountAll({
+                    where:{typeId},
+                    include: [
+                        {model: Brand},
+                        {model: Type},
+                    ],
+                    limit,
+                    offset
+                })}
+            if (brandId && typeId) {
+                devices = await Device.findAndCountAll({
+                    where:{typeId, brandId},
+                    include: [
+                        {model: Brand},
+                        {model: Type},
+                    ],
+                    limit,
+                    offset
+                })}
+            return res.json(devices)
+        } catch (e) {
+            next(badRequest(e.message));
         }
-        if (brandId && !typeId) {
-            devices = await Device.findAndCountAll({where:{brandId}, limit, offset})
-        }
-        if (!brandId && typeId) {
-            devices = await Device.findAndCountAll({where:{typeId}, limit, offset})
-        }
-        if (brandId && typeId){
-            devices = await Device.findAndCountAll({where:{brandId, typeId}, limit, offset})
-        }
-        return res.json(devices)
     }
 
     async getOne(req, res) {
@@ -60,6 +92,20 @@ class DeviceController {
             },
         )
         return res.json(device)
+    }
+
+    async delete(req, res, next){
+        const { id } = req.body;
+
+        try {
+            const device = await Device.findOne({where: {id}});
+
+            await device.destroy();
+
+            return res.json({ message: 'Device deleted' });
+        } catch (error) {
+            return next(badRequest({ error: 'Server error' }));
+        }
     }
 
 }

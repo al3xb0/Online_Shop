@@ -6,10 +6,13 @@ const CreateType = ({show, onHide}) => {
 
     const [value, setValue] = useState('')
     const addType = () => {
-        createType({name: value}).then(data => {
+        createType({name: value})
+            .then(data => {
             setValue('')
             onHide()
-        })
+            window.location.reload()
+            })
+            .catch((e) => alert(e.response.data.message))
     }
 
     return (

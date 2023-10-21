@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Card, Col, Container, Image, Row} from "react-bootstrap";
-import star from '../assets/star.png'
+import bigStar from '../assets/bigStar.png'
 import {useParams} from "react-router-dom";
 import {fetchOneDevice} from "../http/deviceAPI";
 
@@ -23,7 +23,7 @@ const DevicePage = () => {
                         <h2 className="d-flex align-items-center justify-content-center">{device.name}</h2>
                         <div
                             className="d-flex align-items-center justify-content-center"
-                            style={{background: `url(${star}) no-repeat center center`, width: 200, height: 200, backgroundSize: 'cover', fontSize: 64}}>
+                            style={{background: `url(${bigStar}) no-repeat center center`, width: 200, height: 200, backgroundSize: 'cover', fontSize: 64}}>
                             {device.rating}
                         </div>
                     </Row>
