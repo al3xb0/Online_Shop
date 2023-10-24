@@ -1,18 +1,18 @@
 import {observer} from "mobx-react-lite";
 import React from "react";
-import {deleteDevice} from "../../http/deviceAPI";
 import {Button, Form, Modal} from "react-bootstrap";
 import {useState} from "react";
+import {deleteUser} from "../../http/userAPI";
 
-const DeleteDevice = observer(({show, onHide}) => {
+const DeleteUser = observer(({show, onHide}) => {
 
     const [id, setId] = useState('')
 
-    const delDevice = () => {
+    const delUser = () => {
         const formData = new FormData()
         formData.append('id', id)
 
-        deleteDevice(formData)
+        deleteUser(formData)
             .then(data => {
                 setId('')
                 onHide()
@@ -31,7 +31,7 @@ const DeleteDevice = observer(({show, onHide}) => {
         >
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Delete brand
+                    Delete user
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -39,16 +39,16 @@ const DeleteDevice = observer(({show, onHide}) => {
                     <Form.Control
                         value = {id}
                         onChange={e => setId(e.target.value)}
-                        placeholder={"Device id to delete"}
+                        placeholder={"User id to delete"}
                     />
                 </Form>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant={"outline-success"} onClick={onHide}>Close</Button>
-                <Button variant={"outline-danger"} onClick={delDevice}>Delete</Button>
+                <Button variant={"outline-danger"} onClick={delUser}>Delete</Button>
             </Modal.Footer>
         </Modal>
     );
 });
 
-export default DeleteDevice;
+export default DeleteUser;

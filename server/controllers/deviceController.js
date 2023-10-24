@@ -3,14 +3,16 @@ const ApiError = require('../error/ApiError')
 const uuid = require('uuid')
 const path = require('path')
 const {badRequest} = require("../error/ApiError");
+const {unlinkSync} = require("fs");
 
 class DeviceController {
     async create(req, res, next) {
         try {
             let {name, price, brandId, typeId, info} = req.body
+
             const {img} = req.files
             let fileName = uuid.v4() + ".jpg"
-            img.mv(path.resolve(__dirname, '..', 'static', fileName))
+            await img.mv(path.resolve(__dirname, '..', 'static', fileName))
 
             const device = await Device.create({name, price, brandId, typeId, img:fileName})
 
@@ -106,6 +108,50 @@ class DeviceController {
         } catch (error) {
             return next(badRequest({ error: 'Server error' }));
         }
+    }
+
+    async editDevice(req, res, next)
+    {
+        try {
+            let {id, name, price, brandId, typeId, info} = req.body
+            const {img} = req.files
+
+            let device
+            device = await Device.findOne({where: {id: id}})
+
+            if (img) {
+                if (device.img) {
+                    unlinkSync(path.resolve(__dirname, '..', 'static', device.img))
+                }
+                let fileName = uuid.v4() + ".jpg"
+                await img.mv(path.resolve(__dirname, '..', 'static', fileName))
+                await Device.update({img: fileName}, {where: {id: id}})
+            }
+
+            if (info) {
+                info = JSON.parse(info)
+                await DeviceInfo.destroy({where: {deviceId: device.id}});
+                info.forEach(i =>
+                    DeviceInfo.create({
+                        title: i.title,
+                        description: i.description,
+                        deviceId: device.id
+                    })
+                )
+            }
+            device.name = name
+            device.price = price
+            device.brandId = brandId
+            device.typeId = typeId
+            device.info = info
+
+
+            await device.save()
+            return res.json(device)
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
+
     }
 
 }

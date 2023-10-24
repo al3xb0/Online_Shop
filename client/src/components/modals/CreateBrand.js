@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {createBrand} from "../../http/deviceAPI";
-import {ADMIN_ROUTE} from "../../utils/consts";
 
 const CreateBrand = ({show, onHide}) => {
 

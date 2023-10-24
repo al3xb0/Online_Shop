@@ -1,9 +1,8 @@
-import React, {useEffect} from 'react';
-import {Card, Col, Dropdown, Image} from "react-bootstrap";
+import React from 'react';
+import {Card, Col, Image} from "react-bootstrap";
 import star from '../assets/star.png'
 import {useNavigate} from "react-router-dom";
 import {DEVICE_ROUTE} from "../utils/consts";
-import {fetchBrands} from "../http/deviceAPI";
 
 const DeviceItem = ({device}) => {
     const navigate = useNavigate()

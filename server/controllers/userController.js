@@ -1,13 +1,14 @@
 const ApiError = require('../error/ApiError')
 const bcrypt = require('bcrypt')
-const {User, Basket} = require('../models/models')
+const {User, Basket, Device, Type} = require('../models/models')
 const jwt = require('jsonwebtoken')
+const {badRequest} = require("../error/ApiError");
 
 const generateJwt = (id, email, role) => {
     return jwt.sign(
         {id, email, role},
         process.env.SECRET_KEY,
-        {expiresIn: '24h'})
+        {expiresIn: '2h'})
 }
 
 class UserController {
@@ -38,13 +39,60 @@ class UserController {
             return next(ApiError.internal('Wrong password'))
         }
         const token = generateJwt(user.id, user.email, user.role)
-        return res.json({token})
+        const role = user.role
+        return res.json({token, role})
 
     }
 
-    async check(req, res, next) {
+    async check(req, res) {
         const token = generateJwt(req.user.id, req.user.email, req.user.role)
         return res.json({token})
+    }
+
+    async getAll(req, res) {
+        let {limit, page} = req.query
+        page = page || 1
+        limit = limit || 9
+        let offset = page * limit - limit
+        let users
+        users = await User.findAndCountAll({
+            limit,
+            offset
+        })
+        return res.json(users)
+    }
+
+
+    async delete(req, res, next){
+        const { id } = req.body;
+
+        try {
+            const user = await User.findOne({where: {id}});
+
+            await user.destroy();
+
+            return res.json({ message: 'User deleted' });
+        } catch (error) {
+            return next(badRequest({ error: 'Server error' }));
+        }
+    }
+
+    async editUser(req, res, next)
+    {
+        try {
+            const {id, email, password, role} = req.body
+            let users
+            const hashPassword = await bcrypt.hash(password,5)
+            users = await User.findOne({where: {id: id}})
+            users.email = email
+            users.password = hashPassword
+            users.role = role
+            await users.save()
+            return res.json(users)
+        } catch (e) {
+            next(ApiError.badRequest(e.message))
+        }
+
     }
 }
 

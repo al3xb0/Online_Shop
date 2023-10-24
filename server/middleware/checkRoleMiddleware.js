@@ -8,16 +8,16 @@ module.exports = function(role) {
         try {
             const token = req.headers.authorization.split(' ')[1]
             if (!token) {
-                return res.status(401).json({message: "Not logged in"})
+                return res.status(200).json({message: "Not logged in"})
             }
             const decoded = jwt.verify(token, process.env.SECRET_KEY)
             if (decoded.role !== role) {
-                res.status(403).json({message: "No access"})
+                res.status(200).json({message: "No access"})
             }
             req.user = decoded
             next()
         } catch (e) {
-            res.status(401).json({message: "The user is not logged in"})
+            res.status(200).json({message: "The user is not logged in"})
         }
     }
 }

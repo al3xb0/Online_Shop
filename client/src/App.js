@@ -4,7 +4,7 @@ import AppRouter from "./components/AppRouter";
 import NavBar from "./components/NavBar";
 import {observer} from "mobx-react-lite";
 import {Context} from "./index";
-import {check} from "./http/userAPI";
+import {check, checkAdmin} from "./http/userAPI";
 import {Spinner} from "react-bootstrap";
 
 
@@ -13,13 +13,25 @@ const App = observer(() => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        check().then((data) => {
+        if (localStorage.getItem('token')) {
+            if (localStorage.getItem('role') === 'ADMIN'){
+                checkAdmin().then(data => {
+                    user.setIsAdmin(true)
+                })
+            }
+            check().then((data) => {
                 user.setUser(data.role)
                 user.setIsAuth(true)
             })
-            .catch((error) => user.setIsAuth(false))
-            .finally(() => setLoading(false));
+                .catch((error) => user.setIsAuth(false))
+                .finally(() => setLoading(false));
+
+        }
+        else setLoading(false)
+
+
     }, [])
+
 
     if (loading) {
         return <Spinner animation={"grow"}/>

@@ -13,7 +13,9 @@ const NavBar = observer(() => {
     const logOut = () => {
         user.setUser({})
         user.setIsAuth(false)
+        user.setIsAdmin(false)
         localStorage.removeItem('token')
+        localStorage.removeItem('role')
         navigate(LOGIN_ROUTE)
     }
 
@@ -23,7 +25,13 @@ const NavBar = observer(() => {
                 <NavLink style={{color: "white"}} href={SHOP_ROUTE}>Online SHOP</NavLink>
                 {user.isAuth ?
                     <Nav className="ml-auto" style={{color: "white"}}>
-                        <Button variant={"outline-light"} onClick={() => navigate(ADMIN_ROUTE)}>Admin</Button>
+                        {user.isAdmin ?
+                            <Nav className="ml-auto" style={{color: "white"}}>
+                                <Button variant={"outline-light"} onClick={() => navigate(ADMIN_ROUTE)}>Admin</Button>
+                            </Nav>
+                            :
+                            <Nav></Nav>
+                        }
                         <Button variant={"outline-light"} onClick={() => logOut()} className="ms-2">Log out</Button>
                     </Nav>
                     :
