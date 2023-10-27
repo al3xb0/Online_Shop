@@ -13,21 +13,36 @@ const Auth = observer(() => {
     const isLogin = location.pathname === LOGIN_ROUTE
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     const click = async () => {
         try {
             let data;
             if (isLogin) {
-                data = await login(email, password)
+                if (isEmailValid) {
+                    data = await login(email, password)
+                    user.setUser(data)
+                    user.setIsAuth(true)
+                    if (user.user.role === 'ADMIN')
+                    {
+                        user.setIsAdmin(true)}
+                    navigate(SHOP_ROUTE)
+                } else {
+                    alert("Please enter an email address.");
+                }
             } else {
-                data = await registration(email, password)
+                if (isEmailValid) {
+                    data = await registration(email, password)
+                    user.setUser(data)
+                    user.setIsAuth(true)
+                    if (user.user.role === 'ADMIN')
+                    {
+                        user.setIsAdmin(true)}
+                    navigate(SHOP_ROUTE)
+                } else {
+                    alert("Please enter an email address.");
+                }
             }
-            user.setUser(data)
-            user.setIsAuth(true)
-            if (user.user.role === 'ADMIN')
-            {
-                user.setIsAdmin(true)}
-            navigate(SHOP_ROUTE)
         } catch (e) {
             alert(e.response.data.message)
         }
@@ -41,8 +56,9 @@ const Auth = observer(() => {
                <Form className="d-flex flex-column">
                     <Form.Control
                         className="mt-4"
-                        placeholder="Enter your email."
+                        placeholder="name@example.com"
                         value={email}
+                        type={"email"}
                         onChange={e => setEmail(e.target.value)}
                     />
                    <Form.Control

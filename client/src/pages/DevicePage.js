@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Button, Card, Col, Container, Image, Row} from "react-bootstrap";
 import bigStar from '../assets/bigStar.png'
 import {useParams} from "react-router-dom";
-import {addRating, checkRating, fetchOneDevice} from "../http/deviceAPI";
+import {addRating, addToBasket, checkRating, fetchOneDevice} from "../http/deviceAPI";
 import {Context} from "../index";
 import RatingStars from "../components/modals/RatingStars";
 
@@ -30,6 +30,12 @@ const DevicePage = () => {
         });
 
     };
+
+    const add = () => {
+        const formData = new FormData()
+        formData.append('deviceId', id)
+        addToBasket(formData).then(response => alert(`Product ` + device.name + ` was added to the basket!`))
+    }
 
 
     return (
@@ -64,8 +70,13 @@ const DevicePage = () => {
                         className="d-flex flex-column align-items-center justify-content-around"
                         style={{width: 300, height: 300, fontSize: 32, border: '5px solid lightgray'}}
                     >
-                        <h3>{device.price}</h3>
-                        <Button variant={"outline-dark"}>Add to cart</Button>
+                        <h3>{device.price || 0}$</h3>
+                        {user.isAuth ?
+                            <Button variant={"outline-dark"} onClick={add}>Add to basket</Button>
+                            :
+                            <Button variant={"outline-dark"}>Log in to add this product to the basket</Button>
+                        }
+
                     </Card>
                 </Col>
             </Row>

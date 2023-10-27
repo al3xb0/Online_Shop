@@ -66,3 +66,18 @@ export const checkRating = async (body) => {
     const {data} = await $authHost.post('api/rating/check-rating', body);
     return data;
 }
+
+export const addToBasket = async (deviceId) => {
+    const {data} = await $authHost.post('api/basket', deviceId)
+    return data
+}
+
+export const deleteFromBasket = async (id) => {
+    const {data} = await $authHost.put('api/basket/delete', {id:id})
+    return data
+}
+
+export const getBasket = async () => {
+    const {data} = await $authHost.get('api/basket')
+    return data
+}
