@@ -15,13 +15,12 @@ export const login = async (email, password) => {
 }
 
 export const check = async () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-        const { data } = await $authHost.get('api/user/auth');
+    const { data } = await $authHost.get('api/user/auth')
+    if (data.message === "The user is not logged in") {
+        return data
+    } else {
         localStorage.setItem('token', data.token);
         return jwt_decode(data.token);
-    } else {
-        throw Error('Not logged in');
     }
 }
 
@@ -43,12 +42,11 @@ export const editUser = async (user) => {
 }
 
 export const checkAdmin = async() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-        const { data } = await $adminHost.get('api/user/admin');
+    const { data } = await $adminHost.get('api/user/admin');
+    if (data.message === "The user is not logged in") {
+        return data
+    } else {
         localStorage.setItem('token', data.token);
         return jwt_decode(data.token);
-    } else {
-        throw Error('Not admin');
     }
 }

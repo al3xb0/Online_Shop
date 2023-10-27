@@ -57,3 +57,12 @@ export const editDevice = async (device) => {
     return data
 }
 
+export const addRating = async (body) => {
+    const {data} = await $authHost.post('api/rating', body);
+    return data;
+}
+
+export const checkRating = async (body) => {
+    const {data} = await $authHost.post('api/rating/check-rating', body);
+    return data;
+}

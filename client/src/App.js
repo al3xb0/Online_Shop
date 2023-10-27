@@ -13,24 +13,33 @@ const App = observer(() => {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        if (localStorage.getItem('token')) {
-            if (localStorage.getItem('role') === 'ADMIN'){
-                checkAdmin().then(data => {
-                    user.setIsAdmin(true)
-                })
+
+        try {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                setLoading(false);
+                return;
             }
-            check().then((data) => {
-                user.setUser(data.role)
-                user.setIsAuth(true)
-            })
-                .catch((error) => user.setIsAuth(false))
+
+            setLoading(true);
+
+            if (localStorage.getItem('role') === 'ADMIN') {
+                checkAdmin().then(data => {
+                    user.setIsAdmin(true);
+                });
+            }
+
+            check()
+                .then((data) => {
+                    user.setUser(data);
+                    user.setIsAuth(true);
+                })
+                .catch((e) => user.setIsAuth(false))
                 .finally(() => setLoading(false));
-
+        } catch (e) {
         }
-        else setLoading(false)
-
-
-    }, [])
+    }, []);
 
 
     if (loading) {
